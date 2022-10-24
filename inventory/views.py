@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView,CreateView
+from django.views.generic import ListView,CreateView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from . models import Stock
 from . forms import StockFrom
+
 # Create your views here.
 class StockListView(ListView):
     model = Stock
@@ -24,3 +25,17 @@ class StockCreateView(CreateView,SuccessMessageMixin):
         context['savebtn'] = 'Add to Inventory'
         return context
 
+
+class StockUpdateView(UpdateView,SuccessMessageMixin):
+    model = Stock
+    form_class = StockFrom
+    template_name = 'edit_stock.html'
+    success_url = '/inventory'
+    success_messages = 'Stock has been updated successfully'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Stock'
+        context['savebtn'] = 'update Stock'
+        context['delbtn'] = 'Delete Stock'
+        return context
