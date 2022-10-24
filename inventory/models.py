@@ -1,3 +1,13 @@
+from email.policy import default
+from enum import unique
 from django.db import models
 
 # Create your models here.
+class Stock(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100,unique=True)
+    quantity = models.IntegerField(default=1)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

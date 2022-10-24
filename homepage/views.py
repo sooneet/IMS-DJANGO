@@ -7,8 +7,3 @@ class HomeView(View):
     def get(self, request):        
         context = {}
         return render(request, self.template_name, context)
-
-
-
-# def home(request):
-#     return render(request,'home.html')
