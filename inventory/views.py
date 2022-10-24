@@ -1,8 +1,10 @@
-from django.shortcuts import render
-from django.views.generic import ListView,CreateView,UpdateView
+from django.shortcuts import render,redirect,get_object_or_404
+from django.views.generic import ListView,CreateView,UpdateView,View
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from . models import Stock
 from . forms import StockFrom
+
 
 # Create your views here.
 class StockListView(ListView):
@@ -39,3 +41,19 @@ class StockUpdateView(UpdateView,SuccessMessageMixin):
         context['savebtn'] = 'update Stock'
         context['delbtn'] = 'Delete Stock'
         return context
+
+
+class StockDeleteView(View):
+    template_name = 'delete_stock.html'
+    success_message = "Stock has been deleted successfully"   
+
+    def get(self, request, pk):
+        stock = get_object_or_404(Stock,pk=pk)
+        return render(request, self.template_name, {'object': stock})
+
+    def post(self, request, pk):
+        stock = get_object_or_404(Stock,pk=pk)
+        stock.is_deleted = True
+        stock.save()
+        messages.success(request, self.success_message)
+        return redirect('inventory')
